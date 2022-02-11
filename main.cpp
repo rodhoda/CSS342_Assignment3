@@ -1,6 +1,7 @@
 #include <iostream>
+#include "cpu.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    LinkedList linkedStack;
+    cout << "This number has been pushed to the stack: " << linkedStack.push(5) << endl;
 }

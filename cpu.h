@@ -1,6 +1,8 @@
 //
 // Created by rodho on 2/3/2022.
 //
+#pragma once
+#include "node.h"
 #include <list>
 using namespace std;
 #include <string>
@@ -33,17 +35,18 @@ class Cpu {
     int Pop();
 
     friend ostream& operator<<(ostream& os, int);
-
-
-
 };
 
-class LinkedListStrings {
+class LinkedList {
 private:
-    string command;
+    int num;
+    Node* topPtr;
 public:
-    LinkedListStrings();
-    LinkedListStrings(string);
+    LinkedList();
+    LinkedList(const LinkedList&);
+
+    int push(const int&);
+    int pop();
 
     int add();
 
