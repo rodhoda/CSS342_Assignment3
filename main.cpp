@@ -1,7 +1,11 @@
 #include <iostream>
 #include "cpu.h"
+using namespace std;
 
 int main() {
-    LinkedList linkedStack;
-    cout << "This number has been pushed to the stack: " << linkedStack.push(5) << endl;
+
+    Cpu myCpu;
+    string file = R"(C:\Users\rodho\CLionProjects\Assignment3\Prog1.asm)";
+    myCpu.LoadProgram(file);
+
 }

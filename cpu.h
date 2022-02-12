@@ -13,6 +13,7 @@ using namespace std;
 
 
 class Cpu {
+public:
     Cpu();
 
     // Takes a .csm filename as a parameter
