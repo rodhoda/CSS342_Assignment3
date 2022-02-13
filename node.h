@@ -2,6 +2,7 @@
 // Created by rodho on 2/11/2022.
 //
 #pragma once
+
 class Node
 {
 private:
@@ -15,5 +16,6 @@ public:
     void setNext(Node*);
     int getValue() const;
     Node* getNext() const;
+
 };
 

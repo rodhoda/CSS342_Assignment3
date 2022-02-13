@@ -7,12 +7,17 @@
 using namespace std;
 #include <string>
 #include <iostream>
+#include <vector>
 
 #ifndef ASSIGNMENT3_CPU_H
 #define ASSIGNMENT3_CPU_H
 
 
 class Cpu {
+private:
+    vector<pair<string, int>> commandMap;
+    int index;
+    int maxIndex;
 public:
     Cpu();
 
@@ -31,10 +36,6 @@ public:
     //If there are no more lines, return -1.
     int Next();
 
-    int Push();
-
-    int Pop();
-
     friend ostream& operator<<(ostream& os, int);
 };
 
@@ -42,16 +43,20 @@ class LinkedList {
 private:
     int num;
     Node* topPtr;
+
+
 public:
     LinkedList();
     LinkedList(const LinkedList&);
 
     int push(const int&);
     int pop();
-
     int add();
-
-
+    int sub();
+    int mult();
+    int div();
+    int cmp();
+    bool isEmpty();
 };
 
 #endif //ASSIGNMENT3_CPU_H
