@@ -10,6 +10,14 @@ Cpu::Cpu() {};
 
 LinkedList linkedStack;
 
+void Cpu::setStack(Node* stackedList) {
+    topStack = stackedList;
+}
+
+const Node * Cpu::getStack() {
+    return topStack;
+}
+
 void Cpu::LoadProgram(string fileName) {
     index = 0;
     maxIndex = 0;
@@ -35,38 +43,23 @@ void Cpu::LoadProgram(string fileName) {
 
             stringstream convert(numValue);
             convert >> val;
-            cout << "New Node created with value: " << linkedStack.push(val) << endl;
+//            cout << "New Node created with value: " << linkedStack.push(val) << endl;
         }
-        else if (command == "ADD") {
-            linkedStack.add();
-        }
-        else if (command == "SUB") {
-            linkedStack.sub();
-        }
-        else if (command == "MULT") {
-            linkedStack.mult();
-        }
-        else if (command == "DIV") {
-            linkedStack.div();
-        }
-        else if (command == "CMP") {
-            linkedStack.cmp();
-        }
-        else if (!linkedStack.isEmpty())
-            cout << "The stack is not empty" << endl;
         commandMap.push_back(make_pair(command, val));
+        if (!linkedStack.isEmpty())
+            cout << "The stack is not empty" << endl;
         maxIndex++;
 
     }
+    setStack(linkedStack.getPointer());
     maxIndex--;
-    cout << "Value that was popped: " << linkedStack.pop() << endl;
 }
 
 int Cpu::Run() {
-
     while (index <= maxIndex)
         Next();
-    return 0;
+    topStack = linkedStack.getTopPointer();
+    return topStack->getValue();
 }
 
 int Cpu::Next() {
@@ -74,13 +67,45 @@ int Cpu::Next() {
         return -1;
     string commandString = commandMap[index].first;
     int valueInt = commandMap[index].second;
-    cout << commandString << ": " << valueInt << endl;
+//    cout << commandString << ": " << valueInt << endl;
     index++;
+
+    if (commandString == "PSH")
+        linkedStack.push(valueInt);
+
+    else if (commandString == "ADD") {
+        linkedStack.add();
+    }
+    else if (commandString == "SUB") {
+        linkedStack.sub();
+    }
+    else if (commandString == "MULT") {
+        linkedStack.mult();
+    }
+    else if (commandString == "DIV") {
+        linkedStack.div();
+    }
+    else if (commandString == "CMP") {
+        linkedStack.cmp();
+    }
     return 0;
 
-};
+}
+void Cpu::Print() {
+    linkedStack.printList();
+}
+
+ostream& operator<<(ostream &os, Cpu cpu) {
+    cpu.topStack = linkedStack.getTopPointer();
+    os << "Value is " << cpu.topStack->getValue() << endl;
+    return os;
+}
 
 LinkedList::LinkedList() : topPtr(nullptr) {}
+
+Node* LinkedList::getTopPointer() {
+    return topPtr;
+}
 
 int LinkedList::push(const int& intVal) {
     Node* newNode = new Node(intVal, topPtr);
@@ -98,23 +123,44 @@ int LinkedList::pop() {
 }
 
 int LinkedList::add() {
-    return 0;
+    int firstValue = pop();
+    int secondValue = pop();
+    int newValue = firstValue + secondValue;
+    push(newValue);
 }
 
 int LinkedList::sub() {
-    return 0;
+    int firstValue = pop();
+    int secondValue = pop();
+    int newValue = secondValue - firstValue;
+    push(newValue);
 }
 
 int LinkedList::mult() {
-    return 0;
+    int firstValue = pop();
+    int secondValue = pop();
+    int newValue = firstValue * secondValue;
+    push(newValue);
 }
 
 int LinkedList::div() {
-    return 0;
+    int firstValue = pop();
+    int secondValue = pop();
+    if (firstValue == 0)
+        cerr << "Cannot divide with Zero." << endl;
+    int newValue = secondValue / firstValue;
+    push(newValue);
 }
 
 int LinkedList::cmp() {
-    return 0;
+    int firstValue = pop();
+    int secondValue = pop();
+    if (firstValue > secondValue)
+        push(1);
+    else if (firstValue < secondValue)
+        push(-1);
+    else
+        push(0);
 }
 
 bool LinkedList::isEmpty() {
@@ -122,4 +168,24 @@ bool LinkedList::isEmpty() {
         return true;
     else
         return false;
+}
+
+void LinkedList::printList() {
+    LinkedList tempList;
+
+    while (this->isEmpty() == false) {
+        tempList.push(this->topPtr->getValue());
+        this->pop();
+    }
+    while (tempList.isEmpty() == false) {
+        int val = tempList.topPtr->getValue();
+        cout << val << endl;
+        tempList.pop();
+
+        this->push(val);
+    }
+}
+
+Node* LinkedList::getPointer() {
+    return topPtr;
 }

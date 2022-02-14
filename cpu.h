@@ -19,7 +19,11 @@ private:
     int index;
     int maxIndex;
 public:
+    Node* topStack;
     Cpu();
+
+    void setStack(Node*);
+    const Node * getStack();
 
     // Takes a .csm filename as a parameter
     // Ensures the stack is empty and previous program is removed
@@ -36,7 +40,9 @@ public:
     //If there are no more lines, return -1.
     int Next();
 
-    friend ostream& operator<<(ostream& os, int);
+    void Print();
+
+    friend ostream& operator<<(ostream& os, Cpu);
 };
 
 class LinkedList {
@@ -49,6 +55,8 @@ public:
     LinkedList();
     LinkedList(const LinkedList&);
 
+    Node* getTopPointer();
+
     int push(const int&);
     int pop();
     int add();
@@ -57,6 +65,8 @@ public:
     int div();
     int cmp();
     bool isEmpty();
+    void printList();
+    Node* getPointer();
 };
 
 #endif //ASSIGNMENT3_CPU_H
