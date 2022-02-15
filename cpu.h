@@ -23,7 +23,7 @@ public:
     Cpu();
 
     void setStack(Node*);
-    const Node * getStack();
+    Node * getStack();
 
     // Takes a .csm filename as a parameter
     // Ensures the stack is empty and previous program is removed
@@ -39,8 +39,6 @@ public:
     // Runs the next program line and returns 0.
     //If there are no more lines, return -1.
     int Next();
-
-    void Print();
 
     friend ostream& operator<<(ostream& os, Cpu);
 };
@@ -67,6 +65,7 @@ public:
     bool isEmpty();
     void printList();
     Node* getPointer();
+    void clear();
 };
 
 #endif //ASSIGNMENT3_CPU_H

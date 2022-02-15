@@ -14,7 +14,7 @@ void Cpu::setStack(Node* stackedList) {
     topStack = stackedList;
 }
 
-const Node * Cpu::getStack() {
+Node * Cpu::getStack() {
     return topStack;
 }
 
@@ -27,15 +27,16 @@ void Cpu::LoadProgram(string fileName) {
     int val;
     int num;
 
+    if (!linkedStack.isEmpty() || !commandMap.empty()) {
+        linkedStack.clear();
+        commandMap.clear();
+    }
+
     while (!file.eof()){
         getline(file, line);
         int secIndex = line.find(' ');
         command = line.substr(0, secIndex);
 //        cout << command << endl;
-
-        if (linkedStack.isEmpty())
-            cout << "The stack is empty" << endl;
-
 
         if (command == "PSH") {
             string numValue;
@@ -45,13 +46,12 @@ void Cpu::LoadProgram(string fileName) {
             convert >> val;
 //            cout << "New Node created with value: " << linkedStack.push(val) << endl;
         }
-        commandMap.push_back(make_pair(command, val));
-        if (!linkedStack.isEmpty())
-            cout << "The stack is not empty" << endl;
+        commandMap.emplace_back(command, val);
+
         maxIndex++;
 
     }
-    setStack(linkedStack.getPointer());
+
     maxIndex--;
 }
 
@@ -59,6 +59,8 @@ int Cpu::Run() {
     while (index <= maxIndex)
         Next();
     topStack = linkedStack.getTopPointer();
+    if (topStack->getNext() != nullptr)
+        cerr << "There is more than one value left in the stack" << endl;
     return topStack->getValue();
 }
 
@@ -70,8 +72,10 @@ int Cpu::Next() {
 //    cout << commandString << ": " << valueInt << endl;
     index++;
 
-    if (commandString == "PSH")
+    if (commandString == "PSH") {
         linkedStack.push(valueInt);
+        setStack(linkedStack.getPointer());
+    }
 
     else if (commandString == "ADD") {
         linkedStack.add();
@@ -89,15 +93,16 @@ int Cpu::Next() {
         linkedStack.cmp();
     }
     return 0;
-
-}
-void Cpu::Print() {
-    linkedStack.printList();
 }
 
 ostream& operator<<(ostream &os, Cpu cpu) {
     cpu.topStack = linkedStack.getTopPointer();
-    os << "Value is " << cpu.topStack->getValue() << endl;
+    for (int i = 0; i <= cpu.maxIndex; i++) {
+        os << "Value is " << cpu.topStack->getValue() << endl;
+        cpu.topStack = cpu.topStack->getNext();
+        if (cpu.topStack == nullptr)
+            break;
+    }
     return os;
 }
 
@@ -156,7 +161,7 @@ int LinkedList::cmp() {
     int firstValue = pop();
     int secondValue = pop();
     if (firstValue > secondValue)
-        push(1);
+        push(5);
     else if (firstValue < secondValue)
         push(-1);
     else
@@ -170,22 +175,12 @@ bool LinkedList::isEmpty() {
         return false;
 }
 
-void LinkedList::printList() {
-    LinkedList tempList;
 
-    while (this->isEmpty() == false) {
-        tempList.push(this->topPtr->getValue());
-        this->pop();
-    }
-    while (tempList.isEmpty() == false) {
-        int val = tempList.topPtr->getValue();
-        cout << val << endl;
-        tempList.pop();
-
-        this->push(val);
-    }
-}
 
 Node* LinkedList::getPointer() {
     return topPtr;
+}
+
+void LinkedList::clear() {
+    topPtr = nullptr;
 }
